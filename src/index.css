@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-ethiopic: 'Noto Sans Ethiopic', serif;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --color-teal-50: #f0f9fa;
+  --color-teal-100: #d9f0f3;
+  --color-teal-200: #b0e0e6;
+  --color-teal-500: #3a9caa;
+  --color-teal-600: #1B6B77;
+  --color-teal-700: #155f6a;
+  --color-teal-800: #104d57;
+  --color-teal-900: #0b3a42;
+
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #D4A853;
+  --color-amber-600: #c09040;
+
+  --color-bg: #FAFAF8;
+  --color-surface: #ffffff;
+  --color-border: #e8e5e0;
+  --color-text: #1A1A1A;
+  --color-muted: #6b7280;
+
+  --color-mastered: #22c55e;
+  --color-learning: #f59e0b;
+  --color-new: #e5e7eb;
+  --color-error: #ef4444;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-ethiopic {
+  font-family: var(--font-ethiopic);
+  font-feature-settings: "liga" 1;
+}
+
+/* Large character display used in flashcards and learn mode */
+.char-display {
+  font-family: var(--font-ethiopic);
+  font-size: clamp(4rem, 20vw, 8rem);
+  line-height: 1.1;
+  color: var(--color-teal-700);
+  text-align: center;
+  user-select: none;
+}
+
+/* Tap/click feedback */
+.tap-target {
+  min-height: 48px;
+  min-width: 48px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe-area bottom padding for iPhone home-bar */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Global keyboard focus ring — visible only on keyboard/programmatic focus */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-teal-600);
+  outline-offset: 3px;
+}
+
+/* Smooth transitions for card flips and reveals */
+.reveal-transition {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Mastery color utilities */
+.mastery-new      { background-color: var(--color-new); }
+.mastery-learning { background-color: var(--color-learning); }
+.mastery-mastered { background-color: var(--color-mastered); }
+
+/* ── Keyframes ─────────────────────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes char-enter {
+  from { opacity: 0; transform: scale(0.86) translateY(6px); }
+  60%  { transform: scale(1.03) translateY(0); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes feedback-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes success-pop {
+  0%   { opacity: 0; transform: scale(0.55); }
+  65%  { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  18%  { transform: translateX(-7px); }
+  36%  { transform: translateX(7px); }
+  54%  { transform: translateX(-4px); }
+  72%  { transform: translateX(4px); }
+}
+
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50%  { transform: scale(1.22); }
+}
+
+/* ── Animation utility classes ─────────────────────────────────────────────── */
+
+.animate-fade-in    { animation: fade-in     280ms var(--ease-out-quart) both; }
+.animate-char-enter { animation: char-enter  320ms var(--ease-out-expo)  both; }
+.animate-feedback   { animation: feedback-up 220ms var(--ease-out-quart) both; }
+.animate-success    { animation: success-pop 380ms var(--ease-out-expo)  both; }
+.animate-shake      { animation: shake       420ms var(--ease-out-quart) both; }
+.badge-pulse        { animation: badge-pulse 2.4s ease-in-out 1.2s infinite; }
+
+/* ── Reduced motion ────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

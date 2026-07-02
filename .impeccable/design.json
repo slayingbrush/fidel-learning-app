@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-30T00:00:00Z",
+  "title": "Design System: Fidel — Learn Ge'ez Script",
+  "extensions": {
+    "colorMeta": {
+      "teal-primary": {
+        "role": "primary",
+        "displayName": "Deep River Teal",
+        "canonical": "#1B6B77",
+        "tonalRamp": ["#0b3a42", "#104d57", "#155f6a", "#1B6B77", "#3a9caa", "#6fc5d0", "#a8dde3", "#d9f0f3", "#f0f9fa"]
+      },
+      "teal-deep": {
+        "role": "primary-hover",
+        "displayName": "River Deep",
+        "canonical": "#155f6a",
+        "tonalRamp": ["#071e23", "#0d3038", "#13444f", "#155f6a", "#1B6B77", "#3a9caa", "#6fc5d0", "#b0e0e6", "#e8f6f8"]
+      },
+      "teal-mid": {
+        "role": "primary-mid",
+        "displayName": "Midstream",
+        "canonical": "#3a9caa",
+        "tonalRamp": ["#0d2f34", "#1B6B77", "#2a8693", "#3a9caa", "#5ab2bd", "#7fcbd4", "#a8dde3", "#d2eff2", "#f0f9fa"]
+      },
+      "teal-surface": {
+        "role": "primary-surface",
+        "displayName": "Still Pool",
+        "canonical": "#f0f9fa",
+        "tonalRamp": ["#1B6B77", "#3a9caa", "#6fc5d0", "#a8dde3", "#c8ecf0", "#d9f0f3", "#e6f5f7", "#f0f9fa", "#f8fcfd"]
+      },
+      "teal-border": {
+        "role": "primary-border",
+        "displayName": "Ripple",
+        "canonical": "#b0e0e6",
+        "tonalRamp": ["#1B6B77", "#3a9caa", "#6fc5d0", "#9dd7de", "#b0e0e6", "#c8ecf0", "#d9f0f3", "#ecf8fa", "#f8fcfd"]
+      },
+      "amber-accent": {
+        "role": "secondary",
+        "displayName": "Amber Highlight",
+        "canonical": "#D4A853",
+        "tonalRamp": ["#5a3a0a", "#7c5214", "#a06b21", "#c08831", "#D4A853", "#e0be78", "#ebcf96", "#f5e4bc", "#fdf7e9"]
+      },
+      "bg-warm": {
+        "role": "neutral-bg",
+        "displayName": "Warm Near-White",
+        "canonical": "#FAFAF8",
+        "tonalRamp": ["#1A1A1A", "#3d3d3b", "#606060", "#8a8a88", "#b5b5b3", "#d6d6d4", "#e8e8e6", "#f3f3f1", "#FAFAF8"]
+      },
+      "surface": {
+        "role": "neutral-surface",
+        "displayName": "Surface White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#1A1A1A", "#404040", "#737373", "#a3a3a3", "#d4d4d4", "#e8e8e8", "#f0f0f0", "#f8f8f8", "#ffffff"]
+      },
+      "border": {
+        "role": "neutral-border",
+        "displayName": "Border Stone",
+        "canonical": "#e8e5e0",
+        "tonalRamp": ["#2a2825", "#4f4c47", "#78756f", "#a09d97", "#c4c1bb", "#d8d5cf", "#e8e5e0", "#f1eeea", "#f8f6f4"]
+      },
+      "ink": {
+        "role": "neutral-ink",
+        "displayName": "Near-Black Ink",
+        "canonical": "#1A1A1A",
+        "tonalRamp": ["#0a0a0a", "#1A1A1A", "#2e2e2e", "#4a4a4a", "#6b6b6b", "#939393", "#bababa", "#d9d9d9", "#f5f5f5"]
+      },
+      "muted": {
+        "role": "neutral-muted",
+        "displayName": "Muted Stone",
+        "canonical": "#6b7280",
+        "tonalRamp": ["#1a1d24", "#2d3140", "#43485a", "#596070", "#6b7280", "#8b9099", "#adb3bb", "#d1d5db", "#f3f4f6"]
+      },
+      "status-mastered": {
+        "role": "status-success",
+        "displayName": "Mastered Green",
+        "canonical": "#22c55e",
+        "tonalRamp": ["#052e16", "#14532d", "#166534", "#15803d", "#16a34a", "#22c55e", "#4ade80", "#86efac", "#dcfce7"]
+      },
+      "status-learning": {
+        "role": "status-warning",
+        "displayName": "Learning Amber",
+        "canonical": "#f59e0b",
+        "tonalRamp": ["#451a03", "#78350f", "#92400e", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fcd34d", "#fef3c7"]
+      },
+      "status-new": {
+        "role": "status-neutral",
+        "displayName": "Unstarted Gray",
+        "canonical": "#e5e7eb",
+        "tonalRamp": ["#111827", "#374151", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#f9fafb", "#ffffff"]
+      },
+      "status-error": {
+        "role": "status-error",
+        "displayName": "Error Red",
+        "canonical": "#ef4444",
+        "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#b91c1c", "#dc2626", "#ef4444", "#f87171", "#fca5a5", "#fee2e2"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page-level headings only. One per screen. Fraunces adds warmth and gravitas without folksy decoration." },
+      "headline": { "displayName": "Headline", "purpose": "Section headers within a screen (Learn, Practice tab headings). One per page section." },
+      "title": { "displayName": "Title", "purpose": "Card headings, family names, word labels. The workhorse heading level." },
+      "body": { "displayName": "Body", "purpose": "Descriptive copy, instructions, definitions. Max 65-70ch wide on prose." },
+      "label": { "displayName": "Label", "purpose": "Romanization captions, order number labels, state tags. Never all-caps by default." },
+      "ethiopic-display": { "displayName": "Ethiopic Display", "purpose": "The flashcard character. This is the hero scale — monumental, not educational." },
+      "ethiopic-card": { "displayName": "Ethiopic Card", "purpose": "Characters in 7-order reveal row and multiple-choice buttons." }
+    },
+    "shadows": [
+      {
+        "name": "button-ambient",
+        "value": "0 4px 12px rgba(27, 107, 119, 0.18)",
+        "purpose": "Soft teal-tinted shadow on primary buttons at rest. Tinting toward the button's own color makes it feel integrated. Only shadow present at rest on any element."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 4px 12px rgba(0, 0, 0, 0.08)",
+        "purpose": "Neutral gray-black shadow on interactive cards at hover. Never at rest. Communicates tappability."
+      },
+      {
+        "name": "character-card-hover",
+        "value": "0 6px 18px rgba(27, 107, 119, 0.14)",
+        "purpose": "Teal-tinted hover shadow on the character card component. Reinforces the teal surface identity."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for color/border state transitions (choice correct/wrong feedback, button hover)."
+      },
+      {
+        "name": "ease-exit",
+        "value": "cubic-bezier(0.4, 0, 1, 1)",
+        "purpose": "Elements leaving the screen or collapsing."
+      },
+      {
+        "name": "duration-fast",
+        "value": "150ms",
+        "purpose": "Micro-interactions: button press scale, border color change."
+      },
+      {
+        "name": "duration-standard",
+        "value": "200ms",
+        "purpose": "State transitions: card selection feedback, shadow appear/disappear."
+      },
+      {
+        "name": "duration-reveal",
+        "value": "300ms",
+        "purpose": "Character reveal in learn mode, feedback panel slide-up."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "480px" },
+      { "name": "md", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Full-width on mobile, max-width 400px. The learner's commitment gesture.",
+      "html": "<button class=\"ds-btn-primary\">Start review (12 cards)</button>",
+      "css": ".ds-btn-primary { display: flex; align-items: center; justify-content: center; width: 100%; background: #1B6B77; color: #ffffff; font-family: 'Inter', system-ui, sans-serif; font-size: 1rem; font-weight: 600; padding: 16px 24px; border: none; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(27, 107, 119, 0.18); transition: background 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1), box-shadow 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #155f6a; } .ds-btn-primary:active { transform: scale(0.95); box-shadow: none; } .ds-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; } .ds-btn-primary:focus-visible { outline: 2px solid #1B6B77; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action: Back, Skip, Exit. Never competes with primary.",
+      "html": "<button class=\"ds-btn-ghost\">Skip</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #1B6B77; font-family: 'Inter', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; padding: 12px 24px; border: none; border-radius: 16px; cursor: pointer; transition: color 150ms ease; } .ds-btn-ghost:hover { color: #155f6a; } .ds-btn-ghost:focus-visible { outline: 2px solid #1B6B77; outline-offset: 2px; }"
+    },
+    {
+      "name": "Character Card",
+      "kind": "card",
+      "refersTo": "character-card",
+      "description": "The signature component. The Ethiopic character is the content; everything else is the frame.",
+      "html": "<div class=\"ds-char-card\"><span class=\"ds-char-card__char\">ሰ</span><span class=\"ds-char-card__roman\">sä</span><span class=\"ds-char-card__ipa\">/sä/</span><button class=\"ds-char-card__audio\" aria-label=\"Play audio\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"20\" height=\"20\"><path d=\"M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z\"/><path d=\"M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z\"/></svg></button></div>",
+      "css": ".ds-char-card { display: flex; flex-direction: column; align-items: center; gap: 12px; background: #f0f9fa; border: 2px solid #b0e0e6; border-radius: 24px; padding: 32px; width: 192px; height: 192px; justify-content: center; } .ds-char-card__char { font-family: 'Noto Sans Ethiopic', serif; font-size: clamp(4rem, 20vw, 8rem); color: #1B6B77; line-height: 1.1; } .ds-char-card__roman { font-family: 'Inter', system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; color: #1B6B77; } .ds-char-card__ipa { font-family: 'Inter', system-ui, sans-serif; font-size: 0.75rem; color: #6b7280; } .ds-char-card__audio { background: #f0f9fa; color: #1B6B77; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 150ms ease, color 150ms ease; } .ds-char-card__audio:hover { background: #d9f0f3; }"
+    },
+    {
+      "name": "Multiple Choice Button — Default",
+      "kind": "button",
+      "refersTo": "choice-default",
+      "description": "One of 4 answer choices in Practice and Learn quiz modes.",
+      "html": "<button class=\"ds-choice\"><span class=\"ds-choice__roman\">sä</span><span class=\"ds-choice__ipa\">/sä/</span></button>",
+      "css": ".ds-choice { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #ffffff; border: 2px solid #e8e5e0; border-radius: 16px; padding: 16px; min-height: 80px; cursor: pointer; width: 100%; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; } .ds-choice:hover { border-color: #3a9caa; box-shadow: 0 4px 12px rgba(0,0,0,0.08); } .ds-choice:active { transform: scale(0.95); } .ds-choice__roman { font-family: 'Inter', system-ui, sans-serif; font-size: 1.25rem; font-weight: 600; color: #1A1A1A; } .ds-choice__ipa { font-family: 'Inter', system-ui, sans-serif; font-size: 0.75rem; color: #6b7280; }"
+    },
+    {
+      "name": "Multiple Choice Button — Correct",
+      "kind": "button",
+      "refersTo": "choice-correct",
+      "description": "State after a correct answer is selected or revealed.",
+      "html": "<button class=\"ds-choice ds-choice--correct\"><span class=\"ds-choice__roman\">sä</span><span class=\"ds-choice__ipa\">/sä/</span></button>",
+      "css": ".ds-choice { display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 16px; padding: 16px; min-height: 80px; cursor: default; width: 100%; } .ds-choice--correct { background: #f0f9fa; border: 2px solid #1B6B77; } .ds-choice__roman { font-family: 'Inter', system-ui, sans-serif; font-size: 1.25rem; font-weight: 600; color: #1B6B77; } .ds-choice__ipa { font-family: 'Inter', system-ui, sans-serif; font-size: 0.75rem; color: #1B6B77; }"
+    },
+    {
+      "name": "Multiple Choice Button — Wrong",
+      "kind": "button",
+      "refersTo": "choice-wrong",
+      "description": "State after an incorrect choice is selected.",
+      "html": "<button class=\"ds-choice ds-choice--wrong\"><span class=\"ds-choice__roman\">lu</span><span class=\"ds-choice__ipa\">/lu/</span></button>",
+      "css": ".ds-choice { display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 16px; padding: 16px; min-height: 80px; cursor: default; width: 100%; } .ds-choice--wrong { background: #fef2f2; border: 2px solid #ef4444; } .ds-choice__roman { font-family: 'Inter', system-ui, sans-serif; font-size: 1.25rem; font-weight: 600; color: #b91c1c; } .ds-choice__ipa { font-family: 'Inter', system-ui, sans-serif; font-size: 0.75rem; color: #b91c1c; }"
+    },
+    {
+      "name": "Audio Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Circular play button that pairs with every interactive character. Size variants: sm 32px, md 44px, lg 56px.",
+      "html": "<button class=\"ds-audio-btn\" aria-label=\"Play audio\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"22\" height=\"22\"><path d=\"M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z\"/><path d=\"M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z\"/></svg></button>",
+      "css": ".ds-audio-btn { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: #f0f9fa; color: #1B6B77; border: none; cursor: pointer; transition: background 150ms ease, color 150ms ease, transform 150ms ease; } .ds-audio-btn:hover { background: #d9f0f3; } .ds-audio-btn:active { background: #1B6B77; color: #ffffff; transform: scale(0.95); } .ds-audio-btn:focus-visible { outline: 2px solid #1B6B77; outline-offset: 3px; }"
+    },
+    {
+      "name": "Fidel Grid Cell — Mastered",
+      "kind": "custom",
+      "refersTo": "character-card",
+      "description": "A single character in the 34×7 progress grid. Three states: new (gray), learning (amber), mastered (teal).",
+      "html": "<button class=\"ds-grid-cell ds-grid-cell--mastered\" title=\"ሰ — sä\">ሰ</button>",
+      "css": ".ds-grid-cell { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 8px; border: 1px solid transparent; font-family: 'Noto Sans Ethiopic', serif; font-size: 1.25rem; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease; } .ds-grid-cell:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.08); } .ds-grid-cell--new { background: #e5e7eb; color: #9ca3af; border-color: #d1d5db; } .ds-grid-cell--learning { background: #fffbeb; color: #D4A853; border-color: #fcd34d; } .ds-grid-cell--mastered { background: #f0f9fa; color: #1B6B77; border-color: #b0e0e6; }"
+    },
+    {
+      "name": "Bottom Navigation",
+      "kind": "nav",
+      "refersTo": "card",
+      "description": "Fixed bottom tab bar. Four tabs: Learn, Practice, Read, Progress. Badge on Practice when cards are due.",
+      "html": "<nav class=\"ds-bottom-nav\"><a class=\"ds-bottom-nav__tab ds-bottom-nav__tab--active\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253\"/></svg><span>Learn</span></a><a class=\"ds-bottom-nav__tab\" href=\"#\"><span class=\"ds-bottom-nav__badge\">5</span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z\"/></svg><span>Practice</span></a><a class=\"ds-bottom-nav__tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z\"/></svg><span>Read</span></a><a class=\"ds-bottom-nav__tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z\"/></svg><span>Progress</span></a></nav>",
+      "css": ".ds-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 1px solid #e8e5e0; display: flex; } .ds-bottom-nav__tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; color: #6b7280; text-decoration: none; font-family: 'Inter', system-ui, sans-serif; font-size: 10px; font-weight: 500; transition: color 150ms ease; position: relative; min-height: 48px; } .ds-bottom-nav__tab--active { color: #1B6B77; } .ds-bottom-nav__tab:hover { color: #374151; } .ds-bottom-nav__badge { position: absolute; top: 4px; right: calc(50% - 20px); min-width: 16px; height: 16px; padding: 0 3px; background: #D4A853; color: #ffffff; font-size: 10px; font-weight: 700; border-radius: 9999px; display: flex; align-items: center; justify-content: center; line-height: 1; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Patient Teacher",
+    "overview": "Fidel is the patient teacher who sits across from an adult learner who feels quietly embarrassed about a gap in their heritage — someone who has spoken Amharic or Tigrinya their whole life but has never read a word of it. The interface does not rush them, does not congratulate them with confetti, does not demand daily streaks. It puts the script on the table, illuminates one character at a time, and waits.\n\nThe design system's central principle is that the Ethiopic characters are the content. Everything else — spacing, color, typography — exists to frame them. The background recedes. The UI retreats. The character fills the screen. When a learner taps ሰ and hears 'sa,' the visual moment should feel like recognition, not gamification.\n\nThis is a restrained, high-trust system. It earns confidence through clarity, not charm. Buttons are generous in size but quiet in personality. Cards are borderlined, not shadowed. Color is used to teach — teal means 'this is the system working,' amber means 'pay attention here,' green means 'you have this.' Color is never decorative.",
+    "keyCharacteristics": [
+      "Script-first: Ethiopic characters at display scale dominate every practice screen",
+      "Three-font system: Fraunces for headings (warmth, gravitas), Inter for UI (clarity, neutrality), Noto Sans Ethiopic for characters (legibility at all sizes)",
+      "Tonal over shadowed: depth through background tints, not drop shadows",
+      "Mastery-coded color: teal/amber/green/gray encode learning state, not decoration",
+      "Audio-always: every interactive character element pairs with a sound affordance"
+    ],
+    "rules": [
+      { "name": "The Muted-on-Color Rule", "body": "Gray text on any tinted surface is prohibited. On teal-50, amber-50, or any surface with a brand-colored background, use a darker shade of that surface's own hue.", "section": "colors" },
+      { "name": "The Teal Monopoly Rule", "body": "Teal is the system's teaching color. Using teal decoratively dilutes this signal. If teal appears, something should have happened.", "section": "colors" },
+      { "name": "The Script-Above-All Rule", "body": "Ethiopic characters must always be rendered at a size and weight that makes them fully legible without zooming. Never reduce character size for information density.", "section": "typography" },
+      { "name": "The Fraunces Ceiling Rule", "body": "Fraunces appears only on page-level display headings. Prohibited as body, label, or interactive text below 1.5rem.", "section": "typography" },
+      { "name": "The Flat-at-Rest Rule", "body": "All surfaces are flat at rest except primary buttons. Shadows are interaction responses, not decoration.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do render Ethiopic characters at a minimum of 2rem (32px) in any context where the learner should read them.",
+      "Do use teal (#1B6B77) to signal system state: active, correct, unlocked, selected. Reserve it for meaning.",
+      "Do keep muted (#6b7280) on white or near-white surfaces only. On any tinted background, switch to the tinted surface's own dark shade.",
+      "Do pair every interactive Ethiopic character with an audio affordance.",
+      "Do give buttons at least 48px touch height on mobile.",
+      "Do use disabled:opacity-40 with the primary color preserved for disabled states.",
+      "Do preserve the three-tier depth system: bg-warm floor → surface cards → teal-surface character displays."
+    ],
+    "donts": [
+      "Don't use children's-app aesthetics: no bright primary-color palettes, no bubbly rounded fonts, no bouncing character mascots, no confetti on correct answers.",
+      "Don't introduce gamification mechanics: no streak counters threatening loss, no XP bars, no level-up animations.",
+      "Don't use gray text on any colored background.",
+      "Don't render Ethiopic characters at less than 2rem (32px) in interactive contexts.",
+      "Don't use Fraunces for UI labels, buttons, navigation, or any text below 1.5rem.",
+      "Don't add shadows to cards, panels, or containers at rest.",
+      "Don't use amber (#D4A853) for primary actions. Amber is an attention signal, not an action signal.",
+      "Don't remove the audio button from interactive character displays."
+    ]
+  }
+}
