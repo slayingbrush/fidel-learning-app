@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAppStore, useLanguage } from '../store/useAppStore'
 import { useShallow } from 'zustand/react/shallow'
 import { getFamiliesForLanguage } from '../data/fidel'
@@ -40,13 +41,27 @@ export function Progress() {
   return (
     <div className="flex flex-col pb-24 px-4 pt-6 max-w-lg mx-auto w-full">
       {/* Header */}
-      <div className="mb-5">
-        <h1 className="font-display text-3xl font-semibold text-[var(--color-text)] tracking-tight">
-          Progress
-        </h1>
-        {profile?.name && (
-          <p className="font-sans text-sm text-gray-500 mt-1 truncate max-w-[22rem]">{profile.name}</p>
-        )}
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="font-display text-3xl font-semibold text-[var(--color-text)] tracking-tight">
+            Progress
+          </h1>
+          {profile?.name && (
+            <p className="font-sans text-sm text-gray-500 mt-1 truncate max-w-[18rem]">{profile.name}</p>
+          )}
+        </div>
+        <Link
+          to="/settings"
+          aria-label="Settings"
+          className="tap-target flex items-center justify-center w-10 h-10 rounded-xl
+                     text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors shrink-0 mt-0.5"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </Link>
       </div>
 
       {/* Summary cards */}

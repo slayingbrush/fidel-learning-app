@@ -8,6 +8,7 @@ import { Learn } from './pages/Learn'
 import { Practice } from './pages/Practice'
 import { Reading } from './pages/Reading'
 import { Progress } from './pages/Progress'
+import { Settings } from './pages/Settings'
 
 function AppRoutes() {
   const { hydrated, profile } = useAppStore(
@@ -43,6 +44,7 @@ function AppRoutes() {
         <Route path="/practice" element={<Practice />} />
         <Route path="/read"     element={<Reading />} />
         <Route path="/progress" element={<Progress />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="*"         element={<Navigate to="/learn" replace />} />
       </Routes>
       <Navigation />

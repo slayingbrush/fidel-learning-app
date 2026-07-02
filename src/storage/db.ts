@@ -3,7 +3,7 @@ import type { CardData } from '../srs/sm2'
 import type { Language } from '../data/types'
 
 const DB_NAME = 'fidel-app'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 export interface UserProfile {
   id: 'profile'
@@ -13,6 +13,12 @@ export interface UserProfile {
   lastSession: number
   streakDays: number
   lastStreakDate: string  // YYYY-MM-DD
+}
+
+export interface ReminderSettings {
+  id: 'reminders'
+  enabled: boolean
+  time: string  // "HH:MM" 24-hour
 }
 
 export interface SessionStats {
@@ -29,6 +35,7 @@ interface FidelDB {
   unlockedFamilies: { key: string; value: { id: string; unlockedAt: number } }
   decodedWords: { key: string; value: { id: string; decodedAt: number; count: number } }
   sessions: { key: string; value: SessionStats }
+  reminders: { key: 'reminders'; value: ReminderSettings }
 }
 
 let _db: IDBPDatabase<FidelDB> | null = null
@@ -36,12 +43,17 @@ let _db: IDBPDatabase<FidelDB> | null = null
 async function getDb(): Promise<IDBPDatabase<FidelDB>> {
   if (_db) return _db
   _db = await openDB<FidelDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      db.createObjectStore('profile', { keyPath: 'id' })
-      db.createObjectStore('cardStates', { keyPath: 'id' })
-      db.createObjectStore('unlockedFamilies', { keyPath: 'id' })
-      db.createObjectStore('decodedWords', { keyPath: 'id' })
-      db.createObjectStore('sessions', { keyPath: 'id' })
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1) {
+        db.createObjectStore('profile', { keyPath: 'id' })
+        db.createObjectStore('cardStates', { keyPath: 'id' })
+        db.createObjectStore('unlockedFamilies', { keyPath: 'id' })
+        db.createObjectStore('decodedWords', { keyPath: 'id' })
+        db.createObjectStore('sessions', { keyPath: 'id' })
+      }
+      if (oldVersion < 2) {
+        db.createObjectStore('reminders', { keyPath: 'id' })
+      }
     },
   })
   return _db
@@ -131,4 +143,15 @@ export async function loadRecentSessions(days = 7): Promise<SessionStats[]> {
 
 export function todayKey(): string {
   return new Date().toISOString().slice(0, 10)
+}
+
+// ─── Reminder settings ───────────────────────────────────────────
+export async function loadReminderSettings(): Promise<ReminderSettings | null> {
+  const db = await getDb()
+  return (await db.get('reminders', 'reminders')) ?? null
+}
+
+export async function saveReminderSettings(settings: ReminderSettings): Promise<void> {
+  const db = await getDb()
+  await db.put('reminders', settings)
 }
