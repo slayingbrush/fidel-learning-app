@@ -177,7 +177,6 @@ export function Onboarding() {
                 onChange={e => setName(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && setStep('ready')}
                 placeholder="Your name"
-                autoFocus
                 maxLength={40}
                 className="w-full font-sans text-lg text-[var(--color-text)] bg-white border-2
                            border-[var(--color-border)] rounded-2xl px-5 py-4 outline-none

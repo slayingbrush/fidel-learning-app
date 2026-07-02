@@ -212,7 +212,7 @@ export function Reading() {
 
         {/* Full word display */}
         <div className="flex flex-col items-center gap-2">
-          <div className="flex items-baseline gap-1">
+          <div className="flex flex-wrap items-baseline gap-1 justify-center">
             {word.fidel.split('').map((ch, i) => (
               <span
                 key={i}

@@ -33,7 +33,7 @@ export function FidelGrid({ families, cardStates, onCharClick }: Props) {
               <span className="text-xs font-sans text-gray-400 font-medium">Family</span>
             </th>
             {orders.map(o => (
-              <th key={o} scope="col" className="pb-2 min-w-[3rem]">
+              <th key={o} scope="col" className="pb-2 min-w-[2.75rem]">
                 <div className="flex flex-col items-center gap-0.5">
                   <span className="text-[10px] font-sans text-gray-400 font-medium">
                     {o}
