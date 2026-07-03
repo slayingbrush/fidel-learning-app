@@ -171,3 +171,48 @@ a:focus-visible,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Print ─────────────────────────────────────────────────────────────────── */
+
+.print-only { display: none; }
+
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block; }
+
+  body {
+    background: white;
+    color: #111;
+    font-size: 11pt;
+  }
+
+  /* Remove card shadow and border radius on print */
+  .no-print-border-on-print {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure Ethiopic characters print at full weight */
+  .font-ethiopic {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Keep light trace characters actually light when printing */
+  .print-sheet * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Avoid page breaks inside exercise rows */
+  .print-sheet > div {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 1.5cm 2cm;
+    size: A4 portrait;
+  }
+}

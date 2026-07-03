@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useAppStore, useLanguage, useUnlockedChars } from '../store/useAppStore'
 import { useShallow } from 'zustand/react/shallow'
-import { buildReviewQueue, buildChoices, getQueueStats } from '../srs/queue'
+import { buildReviewQueue, buildChoices, getQueueStats, checkTypedAnswer, normalizeRomanization } from '../srs/queue'
 import { AudioButton } from '../components/AudioButton'
 import type { FidelChar } from '../data/types'
 import { getCharsForLanguage } from '../data/fidel'
@@ -11,7 +11,7 @@ type SessionPhase = 'summary' | 'reviewing' | 'complete'
 
 interface ActiveCard {
   char: FidelChar
-  mode: 'char-to-sound' | 'sound-to-char'
+  mode: 'char-to-sound' | 'sound-to-char' | 'type-sound'
   choices: FidelChar[]
   selected: string | null
   correct: boolean | null
@@ -25,14 +25,17 @@ export function Practice() {
   )
   const allChars = getCharsForLanguage(language)
 
-  const [phase, setPhase] = useState<SessionPhase>('summary')
-  const [queue, setQueue] = useState<ReturnType<typeof buildReviewQueue>>([])
-  const [queueIndex, setQueueIndex] = useState(0)
-  const [activeCard, setActiveCard] = useState<ActiveCard | null>(null)
+  const [phase, setPhase]               = useState<SessionPhase>('summary')
+  const [queue, setQueue]               = useState<ReturnType<typeof buildReviewQueue>>([])
+  const [queueIndex, setQueueIndex]     = useState(0)
+  const [activeCard, setActiveCard]     = useState<ActiveCard | null>(null)
   const [sessionCorrect, setSessionCorrect] = useState(0)
-  const [sessionTotal, setSessionTotal] = useState(0)
-  const [autoPlayed, setAutoPlayed] = useState(false)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [sessionTotal, setSessionTotal]     = useState(0)
+  const [autoPlayed, setAutoPlayed]         = useState(false)
+  const [typeInput, setTypeInput]           = useState('')
+  const [typeSubmitted, setTypeSubmitted]   = useState(false)
+  const timerRef   = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const inputRef   = useRef<HTMLInputElement>(null)
 
   useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
 
@@ -41,10 +44,23 @@ export function Practice() {
   const buildActive = useCallback((item: ReturnType<typeof buildReviewQueue>[0]): ActiveCard => ({
     char: item.char,
     mode: item.mode,
-    choices: buildChoices(item.char, allChars),
+    choices: item.mode !== 'type-sound' ? buildChoices(item.char, allChars) : [],
     selected: null,
     correct: null,
   }), [allChars])
+
+  const advanceQueue = useCallback((currentIndex: number, currentQueue: typeof queue) => {
+    const next = currentIndex + 1
+    if (next >= currentQueue.length) {
+      setPhase('complete')
+    } else {
+      setQueueIndex(next)
+      setActiveCard(buildActive(currentQueue[next]))
+      setTypeInput('')
+      setTypeSubmitted(false)
+      setAutoPlayed(false)
+    }
+  }, [buildActive])
 
   const startSession = () => {
     const q = buildReviewQueue(unlockedChars, cardStates)
@@ -52,6 +68,8 @@ export function Practice() {
     setQueueIndex(0)
     setSessionCorrect(0)
     setSessionTotal(0)
+    setTypeInput('')
+    setTypeSubmitted(false)
     setAutoPlayed(false)
     if (q.length > 0) {
       setActiveCard(buildActive(q[0]))
@@ -59,41 +77,46 @@ export function Practice() {
     }
   }
 
-  const handleAnswer = async (choiceId: string) => {
+  // Multiple-choice answer handler
+  const handleChoiceAnswer = async (choiceId: string) => {
     if (!activeCard || activeCard.selected) return
     const correct = choiceId === activeCard.char.id
     setActiveCard(c => c ? { ...c, selected: choiceId, correct } : c)
     setSessionTotal(t => t + 1)
     if (correct) setSessionCorrect(c => c + 1)
-
-    // SM-2 quality: correct on first try = 4, wrong = 1
     await reviewCard(activeCard.char.id, correct ? 4 : 1)
-
-    timerRef.current = setTimeout(() => {
-      const next = queueIndex + 1
-      if (next >= queue.length) {
-        setPhase('complete')
-      } else {
-        setQueueIndex(next)
-        setActiveCard(buildActive(queue[next]))
-        setAutoPlayed(false)
-      }
-    }, 1100)
+    timerRef.current = setTimeout(() => advanceQueue(queueIndex, queue), 1100)
   }
 
-  // Auto-play audio for sound-to-char mode
+  // Free-recall typing handler
+  const handleTypeAnswer = async () => {
+    if (!activeCard || typeSubmitted || !typeInput.trim()) return
+    const correct = checkTypedAnswer(typeInput, activeCard.char.romanization)
+    setTypeSubmitted(true)
+    setActiveCard(c => c ? { ...c, selected: 'typed', correct } : c)
+    setSessionTotal(t => t + 1)
+    if (correct) setSessionCorrect(c => c + 1)
+    await reviewCard(activeCard.char.id, correct ? 4 : 1)
+    // Give more time on wrong answers so the correction registers
+    timerRef.current = setTimeout(() => advanceQueue(queueIndex, queue), correct ? 1000 : 2000)
+  }
+
   useEffect(() => {
     if (activeCard?.mode === 'sound-to-char' && !autoPlayed) {
       setAutoPlayed(true)
     }
-  }, [activeCard, autoPlayed])
+    if (activeCard?.mode === 'type-sound' && !typeSubmitted) {
+      // Focus input when type-sound card appears
+      timerRef.current = setTimeout(() => inputRef.current?.focus(), 80)
+    }
+  }, [activeCard, autoPlayed, typeSubmitted])
 
   const accuracy = sessionTotal > 0 ? Math.round((sessionCorrect / sessionTotal) * 100) : 0
 
   // ── Summary ───────────────────────────────────────────────────────────────
   if (phase === 'summary') {
     return (
-      <div className="flex flex-col pb-24 px-4 pt-6 max-w-lg mx-auto w-full">
+      <div className="flex flex-col pb-24 md:pb-8 px-4 pt-6 max-w-lg mx-auto w-full">
         <div className="mb-6">
           <h1 className="font-display text-3xl font-semibold text-[var(--color-text)] tracking-tight">
             Practice
@@ -103,11 +126,8 @@ export function Practice() {
           </p>
         </div>
 
-        {/* Due count banner */}
         <div className={`rounded-2xl p-5 mb-6 ${
-          stats.dueToday > 0
-            ? 'bg-teal-600 text-white'
-            : 'bg-teal-50 border border-teal-100'
+          stats.dueToday > 0 ? 'bg-teal-600 text-white' : 'bg-teal-50 border border-teal-100'
         }`}>
           <p className={`font-sans text-sm font-medium ${stats.dueToday > 0 ? 'text-teal-100' : 'text-teal-600'}`}>
             Due for review
@@ -124,16 +144,30 @@ export function Practice() {
           </p>
         </div>
 
-        {/* Stats row */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           {[
-            { label: 'New', count: stats.new, color: 'text-gray-600', bg: 'bg-gray-50 border-gray-100' },
+            { label: 'New',      count: stats.new,      color: 'text-gray-600',  bg: 'bg-gray-50 border-gray-100' },
             { label: 'Learning', count: stats.learning, color: 'text-amber-700', bg: 'bg-amber-50 border-amber-100' },
-            { label: 'Mastered', count: stats.mastered, color: 'text-teal-700', bg: 'bg-teal-50 border-teal-100' },
+            { label: 'Mastered', count: stats.mastered, color: 'text-teal-700',  bg: 'bg-teal-50 border-teal-100' },
           ].map(s => (
             <div key={s.label} className={`rounded-2xl border p-4 text-center ${s.bg}`}>
               <p className={`font-display text-3xl font-semibold ${s.color}`}>{s.count}</p>
               <p className={`font-sans text-xs font-medium mt-0.5 ${s.color}`}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white border border-[var(--color-border)] rounded-2xl p-4 mb-6 space-y-2">
+          <p className="font-sans text-xs font-semibold text-gray-400 uppercase tracking-wider">Quiz types</p>
+          {[
+            ['See character → pick sound', 'Recognition (easier)'],
+            ['Hear sound → pick character', 'Audio identification'],
+            ['See character → type sound', 'Free recall (most effective)'],
+          ].map(([title, badge]) => (
+            <div key={title} className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-teal-400 shrink-0" />
+              <span className="font-sans text-sm text-[var(--color-text)]">{title}</span>
+              <span className="ml-auto font-sans text-xs text-teal-600 font-medium shrink-0">{badge}</span>
             </div>
           ))}
         </div>
@@ -154,7 +188,7 @@ export function Practice() {
   // ── Complete ──────────────────────────────────────────────────────────────
   if (phase === 'complete') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-svh pb-24 px-6 max-w-lg mx-auto w-full gap-8">
+      <div className="flex flex-col items-center justify-center min-h-svh pb-24 md:pb-8 px-6 max-w-lg mx-auto w-full gap-8">
         <div className="text-center space-y-2">
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
@@ -174,9 +208,7 @@ export function Practice() {
           >
             Session done!
           </motion.h2>
-          <p className="font-sans text-gray-500">
-            {sessionTotal} cards reviewed
-          </p>
+          <p className="font-sans text-gray-500">{sessionTotal} cards reviewed</p>
         </div>
 
         <div className="w-full bg-white rounded-2xl border border-[var(--color-border)] divide-y divide-[var(--color-border)]">
@@ -217,13 +249,11 @@ export function Practice() {
   const progress = queueIndex / queue.length
 
   return (
-    <div className="flex flex-col items-center min-h-svh pb-24 px-6 pt-6 max-w-lg mx-auto w-full gap-6">
+    <div className="flex flex-col items-center min-h-svh pb-24 md:pb-8 px-6 pt-6 max-w-lg mx-auto w-full gap-6">
       {/* Progress bar */}
       <div className="w-full">
         <div className="flex justify-between items-center mb-2">
-          <span className="font-sans text-xs text-gray-400">
-            {queueIndex + 1} / {queue.length}
-          </span>
+          <span className="font-sans text-xs text-gray-400">{queueIndex + 1} / {queue.length}</span>
           <button
             onClick={() => {
               if (timerRef.current) clearTimeout(timerRef.current)
@@ -242,7 +272,6 @@ export function Practice() {
         </div>
       </div>
 
-      {/* Card: mode label + question + choices — all exit/enter as one unit */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeCard.char.id + activeCard.mode}
@@ -252,98 +281,165 @@ export function Practice() {
           transition={{ duration: 0.18, ease: [0.25, 1, 0.5, 1] }}
           className="flex flex-col items-center gap-6 w-full"
         >
-          {/* Mode label */}
-          <p className="font-sans text-xs text-gray-400 uppercase tracking-wider self-start">
-            {activeCard.mode === 'char-to-sound' ? 'What sound is this?' : 'Find this character'}
-          </p>
 
-          {/* Question */}
-          {activeCard.mode === 'char-to-sound' ? (
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-44 h-44 rounded-3xl bg-teal-50 border-2 border-teal-200 flex items-center justify-center">
-                <span className="font-ethiopic text-8xl text-teal-700 leading-none">
-                  {activeCard.char.char}
-                </span>
+          {/* ── Type-sound mode ─────────────────────────────── */}
+          {activeCard.mode === 'type-sound' && (
+            <>
+              <p className="font-sans text-xs text-gray-400 uppercase tracking-wider self-start">
+                Type what you hear
+              </p>
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-44 h-44 rounded-3xl bg-teal-50 border-2 border-teal-200 flex items-center justify-center">
+                  <span className="font-ethiopic text-8xl text-teal-700 leading-none">
+                    {activeCard.char.char}
+                  </span>
+                </div>
+                <AudioButton text={activeCard.char.romanization} language={language} size="md" />
               </div>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-44 h-44 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
-                <span className="font-sans text-4xl font-bold text-amber-700">
-                  {activeCard.char.romanization}
-                </span>
+
+              <div className="w-full space-y-3">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={typeInput}
+                  onChange={e => !typeSubmitted && setTypeInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') void handleTypeAnswer() }}
+                  disabled={typeSubmitted}
+                  placeholder="Type the sound (e.g. ha, mi, lo…)"
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  className={`w-full font-sans text-lg text-[var(--color-text)] border-2 rounded-2xl
+                    px-5 py-4 outline-none transition-colors
+                    ${typeSubmitted
+                      ? activeCard.correct
+                        ? 'border-teal-500 bg-teal-50 text-teal-700'
+                        : 'border-red-400 bg-red-50 text-red-700'
+                      : 'border-[var(--color-border)] bg-white focus:border-teal-500'
+                    }`}
+                />
+                {!typeSubmitted && (
+                  <button
+                    onClick={() => void handleTypeAnswer()}
+                    disabled={!typeInput.trim()}
+                    className="w-full bg-teal-600 hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed
+                               active:scale-95 text-white font-sans font-semibold text-base py-4 rounded-2xl
+                               transition-all"
+                  >
+                    Check
+                  </button>
+                )}
+                {typeSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`rounded-2xl p-4 font-sans ${
+                      activeCard.correct ? 'bg-teal-50 text-teal-700' : 'bg-red-50 text-red-700'
+                    }`}
+                  >
+                    <p className="font-semibold">
+                      {activeCard.correct ? '✓ Correct!' : '✗ Not quite'}
+                    </p>
+                    {!activeCard.correct && (
+                      <p className="text-sm mt-1">
+                        The answer is <span className="font-bold">{activeCard.char.romanization}</span>
+                        {normalizeRomanization(activeCard.char.romanization) !== activeCard.char.romanization && (
+                          <span className="text-red-500"> (you can type "{normalizeRomanization(activeCard.char.romanization)}")</span>
+                        )}
+                      </p>
+                    )}
+                  </motion.div>
+                )}
               </div>
-              <AudioButton
-                text={activeCard.char.romanization}
-                language={language}
-                size="lg"
-                label="Hear the sound"
-              />
-            </div>
+            </>
           )}
 
-          {/* Choices */}
-          <div className="grid grid-cols-2 gap-3 w-full">
-            {activeCard.choices.map(choice => {
-              const isSelected = activeCard.selected === choice.id
-              const isCorrect = choice.id === activeCard.char.id
-              let style = 'border-[var(--color-border)] bg-white hover:border-teal-300 hover:shadow-sm'
-              if (isSelected && isCorrect)  style = 'border-teal-500 bg-teal-50'
-              if (isSelected && !isCorrect) style = 'border-red-400 bg-red-50'
-              if (!isSelected && activeCard.selected && isCorrect) style = 'border-teal-500 bg-teal-50'
+          {/* ── Multiple-choice modes ────────────────────────── */}
+          {activeCard.mode !== 'type-sound' && (
+            <>
+              <p className="font-sans text-xs text-gray-400 uppercase tracking-wider self-start">
+                {activeCard.mode === 'char-to-sound' ? 'What sound is this?' : 'Find this character'}
+              </p>
 
-              return (
-                <button
-                  key={choice.id}
-                  onClick={() => handleAnswer(choice.id)}
-                  disabled={!!activeCard.selected}
-                  className={`tap-target rounded-2xl border-2 p-4 transition-all flex flex-col items-center gap-2
-                    ${style} ${!activeCard.selected ? 'active:scale-95' : ''}`}
-                >
-                  {activeCard.mode === 'char-to-sound' ? (
-                    <>
-                      <span className="font-sans font-semibold text-xl text-[var(--color-text)]">
-                        {choice.romanization}
-                      </span>
-                      <span className="font-sans text-xs text-gray-400">/{choice.ipa}/</span>
-                    </>
-                  ) : (
-                    <span className="font-ethiopic text-4xl text-teal-700 leading-none">
-                      {choice.char}
+              {activeCard.mode === 'char-to-sound' ? (
+                <div className="w-44 h-44 rounded-3xl bg-teal-50 border-2 border-teal-200 flex items-center justify-center">
+                  <span className="font-ethiopic text-8xl text-teal-700 leading-none">
+                    {activeCard.char.char}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-44 h-44 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
+                    <span className="font-sans text-4xl font-bold text-amber-700">
+                      {activeCard.char.romanization}
                     </span>
-                  )}
-                </button>
-              )
-            })}
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Feedback */}
-      <AnimatePresence>
-        {activeCard.selected && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
-            className={`w-full rounded-2xl p-4 flex items-center gap-3 font-sans font-semibold
-              ${activeCard.correct ? 'bg-teal-50 text-teal-700' : 'bg-red-50 text-red-700'}`}
-          >
-            <span className="text-xl">{activeCard.correct ? '✓' : '✗'}</span>
-            <div>
-              <p>{activeCard.correct ? 'Correct!' : 'Not quite'}</p>
-              {!activeCard.correct && (
-                <p className="font-normal text-sm mt-0.5">
-                  {activeCard.char.char} = {activeCard.char.romanization}
-                </p>
+                  </div>
+                  <AudioButton text={activeCard.char.romanization} language={language} size="lg" label="Hear the sound" />
+                </div>
               )}
-            </div>
-            <div className="ml-auto">
-              <AudioButton text={activeCard.char.romanization} language={language} size="sm" />
-            </div>
-          </motion.div>
-        )}
+
+              <div className="grid grid-cols-2 gap-3 w-full">
+                {activeCard.choices.map(choice => {
+                  const isSelected = activeCard.selected === choice.id
+                  const isCorrect  = choice.id === activeCard.char.id
+                  let style = 'border-[var(--color-border)] bg-white hover:border-teal-300 hover:shadow-sm'
+                  if (isSelected && isCorrect)  style = 'border-teal-500 bg-teal-50'
+                  if (isSelected && !isCorrect) style = 'border-red-400 bg-red-50'
+                  if (!isSelected && activeCard.selected && isCorrect) style = 'border-teal-500 bg-teal-50'
+
+                  return (
+                    <button
+                      key={choice.id}
+                      onClick={() => void handleChoiceAnswer(choice.id)}
+                      disabled={!!activeCard.selected}
+                      className={`tap-target rounded-2xl border-2 p-4 transition-all flex flex-col items-center gap-2
+                        ${style} ${!activeCard.selected ? 'active:scale-95' : ''}`}
+                    >
+                      {activeCard.mode === 'char-to-sound' ? (
+                        <>
+                          <span className="font-sans font-semibold text-xl text-[var(--color-text)]">
+                            {choice.romanization}
+                          </span>
+                          <span className="font-sans text-xs text-gray-400">/{choice.ipa}/</span>
+                        </>
+                      ) : (
+                        <span className="font-ethiopic text-4xl text-teal-700 leading-none">
+                          {choice.char}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <AnimatePresence>
+                {activeCard.selected && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+                    className={`w-full rounded-2xl p-4 flex items-center gap-3 font-sans font-semibold
+                      ${activeCard.correct ? 'bg-teal-50 text-teal-700' : 'bg-red-50 text-red-700'}`}
+                  >
+                    <span className="text-xl">{activeCard.correct ? '✓' : '✗'}</span>
+                    <div>
+                      <p>{activeCard.correct ? 'Correct!' : 'Not quite'}</p>
+                      {!activeCard.correct && (
+                        <p className="font-normal text-sm mt-0.5">
+                          {activeCard.char.char} = {activeCard.char.romanization}
+                        </p>
+                      )}
+                    </div>
+                    <div className="ml-auto">
+                      <AudioButton text={activeCard.char.romanization} language={language} size="sm" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
+        </motion.div>
       </AnimatePresence>
     </div>
   )
